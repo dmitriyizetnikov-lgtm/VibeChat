@@ -9,37 +9,41 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Хранилище пользователей в памяти
-const users = {};
+const users = {}; // { socketId: username }
+const friends = {}; // { username: [list of friend names] }
 
 io.on('connection', (socket) => {
-    console.log('Пользователь подключился');
-
     socket.on('register', (username) => {
         users[socket.id] = username;
-        socket.broadcast.emit('message', {
-            user: 'Система',
-            text: `${username} ворвался в VibeChat!`
-        });
+        if (!friends[username]) friends[username] = [];
+        socket.join('common'); // Все заходят в общий чат
+        console.log(`${username} подключился`);
+    });
+
+    // Добавление в друзья
+    socket.on('addFriend', (friendName) => {
+        const myName = users[socket.id];
+        if (friends[friendName] && myName !== friendName) {
+            if (!friends[myName].includes(friendName)) {
+                friends[myName].push(friendName);
+                friends[friendName].push(myName);
+                socket.emit('friendAdded', friendName);
+                // Уведомляем друга, если он в сети
+                socket.broadcast.emit('updateFriendList');
+            }
+        } else {
+            socket.emit('errorMsg', 'Пользователь не найден или это вы');
+        }
     });
 
     socket.on('chatMessage', (msg) => {
-        io.emit('message', { user: users[socket.id], text: msg });
+        io.to('common').emit('message', { user: users[socket.id], text: msg });
     });
 
     socket.on('disconnect', () => {
-        if (users[socket.id]) {
-            io.emit('message', {
-                user: 'Система',
-                text: `${users[socket.id]} покинул чат.`
-            });
-            delete users[socket.id];
-        }
+        delete users[socket.id];
     });
 });
 
-// Настройка порта для Render
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`VibeChat запущен на порту ${PORT}`);
-});
+const PORT = process.env.PORT || 10000;
+server.listen(PORT, () => console.log(`Сервер VibeChat на порту ${PORT}`));
