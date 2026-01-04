@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>VibeChat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="auth-screen">
+    <div class="auth-box">
+        <h1>VibeChat</h1>
+        <p>Вайб твоего общения</p>
+        <input type="text" id="username" placeholder="Придумай никнейм...">
+        <button onclick="login()">Войти</button>
+    </div>
+</div>
+
+<div id="chat-screen" style="display:none;">
+    <div class="sidebar">
+        <h3>VibeChat</h3>
+        <div class="server-list">
+            <div class="server-icon active"># общий</div>
+        </div>
+    </div>
+    <div class="main-chat">
+        <div id="messages"></div>
+        <div class="input-area">
+            <input type="text" id="message-input" placeholder="Написать в #общий...">
+            <button id="send-btn">Отправить</button>
+        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
