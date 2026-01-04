@@ -6,32 +6,36 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="auth-screen">
-    <div class="auth-box">
-        <h1>VibeChat</h1>
-        <p>Вайб твоего общения</p>
-        <input type="text" id="username" placeholder="Придумай никнейм...">
-        <button onclick="login()">Войти</button>
+    <div id="auth-screen">
+        <div class="auth-box">
+            <h1>VibeChat</h1>
+            <input type="text" id="username" placeholder="Твой никнейм...">
+            <button onclick="login()">Войти</button>
+        </div>
     </div>
-</div>
 
-<div id="chat-screen" style="display:none;">
-    <div class="sidebar">
-        <h3>VibeChat</h3>
-        <div class="server-list">
+    <div id="chat-screen" style="display:none;">
+        <div class="sidebar">
+            <h3>VibeChat</h3>
+            <div class="section-title">КАНАЛЫ</div>
             <div class="server-icon active"># общий</div>
+            
+            <div class="section-title">ДРУЗЬЯ</div>
+            <div id="friends-list"></div>
+            <input type="text" id="friend-input" placeholder="Ник друга...">
+            <button onclick="addFriend()" class="small-btn">Добавить</button>
+        </div>
+        
+        <div class="main-chat">
+            <div id="messages"></div>
+            <div class="input-area">
+                <input type="text" id="message-input" placeholder="Написать сообщение...">
+                <button id="send-btn">Отправить</button>
+            </div>
         </div>
     </div>
-    <div class="main-chat">
-        <div id="messages"></div>
-        <div class="input-area">
-            <input type="text" id="message-input" placeholder="Написать в #общий...">
-            <button id="send-btn">Отправить</button>
-        </div>
-    </div>
-</div>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="app.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
